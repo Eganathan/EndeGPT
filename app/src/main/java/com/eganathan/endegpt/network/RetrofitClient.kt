@@ -3,17 +3,26 @@ package com.eganathan.endegpt.network
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-object RetrofitClient {
-    private val retrofitInstance: Retrofit? = getInstance()
-    fun getInstance(): Retrofit {
-        lateinit var retrofit: Retrofit
+class RetrofitClient{
 
-        if (retrofitInstance == null)
-            retrofit = retrofit2.Retrofit.Builder().baseUrl("https://reqres.in")
-                .addConverterFactory(MoshiConverterFactory.create()).build()
-        else retrofitInstance
+    companion object
+    {
+        var retrofit:Retrofit?=null;
+        fun getRetrofitObject():Retrofit?
+        {
+            if(retrofit==null)
+            {
+                synchronized(RetrofitClient ::class.java)
+                {
+                    retrofit=Retrofit.Builder()
+                        .addConverterFactory(MoshiConverterFactory.create())
+                        .baseUrl("YOUR_BASE_URL")
+                        .build()
+                }
+            }
+            return retrofit
 
-        return retrofit
+        }
+
     }
-
 }
